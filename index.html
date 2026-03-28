@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ninth</title>
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+
+  <main class="main">
+
+    <!-- LEGACY CLIENT -->
+    <div id="legacyClient" style="display:none; width:100%; height:100%;">
+      <header class="legacy-header">
+        <div class="logo" id="legacyLogoEl"><span class="logo-text">Aurora</span></div>
+        <div class="legacy-header-right">
+          <div id="gameCount" class="game-count-badge">0 Games</div>
+          <div id="legacyPlayerToolbar" class="legacy-toolbar" style="display:none;">
+            <button id="legacyBackBtn" class="lbtn">🏠 Back</button>
+            <button id="legacyFullscreenBtn" class="lbtn">⛶ Fullscreen</button>
+          </div>
+          <button id="legacyToRecentBtn" class="lbtn">← Main Client</button>
+        </div>
+      </header>
+      <div class="legacy-body">
+        <aside class="legacy-sidebar">
+          <div class="legacy-search-wrap">
+            <input type="text" id="legacySearchInput" class="legacy-search" placeholder="Search games…">
+          </div>
+          <div id="gameGrid" class="legacy-grid"></div>
+        </aside>
+        <section class="legacy-display">
+          <div class="welcome-screen" id="welcomeScreen">
+            <div class="welcome-content">
+              <div class="welcome-icon">🎮</div>
+              <h2>Aurora Legacy</h2>
+              <p>Select a game from the sidebar to play.</p>
+            </div>
+          </div>
+          <iframe id="legacyGameFrame" class="game-frame"></iframe>
+        </section>
+      </div>
+    </div>
+
+    <!-- HOME SCREEN -->
+    <section class="home">
+      <header class="top-bar">
+        <div class="logo" id="logoEl"><span class="logo-text">Ninth</span></div>
+        <div class="top-bar-right">
+          <div id="clock" class="clock-display">00:00</div>
+          <div id="playtime-display" class="playtime-display" title="Total playtime">0.0h</div>
+          <button id="recentBtn" class="icon-btn" title="Recently Played">⏱</button>
+          <button id="helpBtn" class="icon-btn" title="Help">?</button>
+          <button id="clientToggleBtn" class="icon-btn" title="Legacy Client">☰</button>
+          <button id="settingsBtn" class="gear-btn" title="Settings">⚙</button>
+        </div>
+      </header>
+
+      <!-- Search & Sort bar (hidden by default, shown on search icon) -->
+      <div class="search-row">
+        <input type="text" id="searchInput" class="search-bar" placeholder="Search games…">
+        <select id="sortSelect" class="sort-select">
+          <option value="default">All Games</option>
+          <option value="playable">Playable Only</option>
+          <option value="favorites">Favorites</option>
+          <option value="alphabetical">A – Z</option>
+          <option value="genre-action">Action</option>
+          <option value="genre-adventure">Adventure</option>
+          <option value="genre-puzzle">Puzzle</option>
+          <option value="genre-rpg">RPG</option>
+        </select>
+        <button id="randomBtn" class="random-btn" title="Random Game">🎲 Random</button>
+      </div>
+
+      <div id="favoritesBar" class="favorites-bar"></div>
+
+      <!-- Carousel -->
+      <div class="carousel-area">
+        <button id="scrollLeftBtn" class="carousel-arrow left-arrow">❮</button>
+        <div id="gameStrip" class="game-strip" tabindex="0"></div>
+        <button id="scrollRightBtn" class="carousel-arrow right-arrow">❯</button>
+      </div>
+
+      <div id="gameSelectedTitle" class="selected-title"></div>
+      <div class="carousel-hint">Click to select · Click again to play · ← → to navigate</div>
+    </section>
+
+    <!-- GAME PLAYER -->
+    <section class="player" id="playerSection" style="display:none;">
+      <div class="player-toolbar">
+        <button id="backBtn" class="toolbar-btn">Home</button>
+        <button id="refreshBtn" class="toolbar-btn">Refresh</button>
+        <button id="fullscreenBtn" class="toolbar-btn">Fullscreen</button>
+        <button id="externalBtn" class="toolbar-btn">Open In New Tab</button>
+        <div class="toolbar-center">
+          <span id="gameTitle" class="game-title-display">Game</span>
+          <span id="sessionTimer" class="session-timer">00:00</span>
+        </div>
+      </div>
+      <iframe id="gameFrame" class="game-frame" title="Game frame"></iframe>
+    </section>
+
+  </main>
+
+  <!-- CARD TEMPLATE -->
+  <template id="cardTemplate">
+    <div class="game-card">
+      <div class="game-card-image">
+        <img class="game-cover" alt="game cover" />
+      </div>
+      <div class="game-title" style="display:none;">Game</div>
+    </div>
+  </template>
+
+  <!-- RECENTLY PLAYED MODAL -->
+  <div id="recentModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Recently Played</h3>
+        <button id="closeRecentBtn" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body" id="recentListBody">
+        <div style="color:var(--muted);text-align:center;padding:20px;">No recently played games yet</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HELP MODAL -->
+  <div id="helpModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Keyboard Shortcuts</h3>
+        <button id="closeHelpBtn" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="help-section">
+          <h4>Navigation</h4>
+          <div class="help-item"><span class="key">← →</span> Navigate games</div>
+          <div class="help-item"><span class="key">Enter</span> Play selected game</div>
+          <div class="help-item"><span class="key">Esc</span> Exit game</div>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="help-section">
+          <h4>Features</h4>
+          <div class="help-item"><span class="key">F11</span> Fullscreen mode</div>
+          <div class="help-item"><span class="key">Ctrl+F</span> Search games</div>
+          <div class="help-item"><span class="key">🎲</span> Random game</div>
+          <div class="help-item">Playtime tracker per game</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Settings</h3>
+        <button id="closeSettingsBtn" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-option">
+          <div class="settings-label">Sound Effects</div>
+          <label class="toggle-switch"><input type="checkbox" id="soundToggle"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Dark Mode</div>
+          <label class="toggle-switch"><input type="checkbox" id="darkModeToggle"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Animations</div>
+          <label class="toggle-switch"><input type="checkbox" id="animationsToggle" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Session Timer</div>
+          <label class="toggle-switch"><input type="checkbox" id="timerToggle" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Auto-Play on Launch</div>
+          <label class="toggle-switch"><input type="checkbox" id="autoPlayToggle"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">RGB Border</div>
+          <label class="toggle-switch"><input type="checkbox" id="rgbToggle" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Particle Effects</div>
+          <label class="toggle-switch"><input type="checkbox" id="particlesToggle" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Custom Wallpaper</div>
+          <div style="display:flex;gap:8px;">
+            <button id="bgUploadBtn" class="secondary-btn">Upload</button>
+            <button id="bgResetBtn" class="secondary-btn danger-text">Reset</button>
+          </div>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Custom Logo</div>
+          <div style="display:flex;gap:8px;">
+            <button id="logoUploadBtn" class="secondary-btn">Upload</button>
+            <button id="logoResetBtn" class="secondary-btn danger-text">Reset</button>
+          </div>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Game Card Size</div>
+          <select id="gridSizeSelect" class="sort-select" style="width:100px;">
+            <option value="compact">Small</option>
+            <option value="normal" selected>Normal</option>
+            <option value="large">Large</option>
+          </select>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">24-Hour Clock</div>
+          <label class="toggle-switch"><input type="checkbox" id="hourFormatToggle"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Color Theme</div>
+          <select id="colorThemeSelect" class="sort-select" style="width:100%;margin-top:8px;">
+            <option value="cyberpunk">Cyberpunk (Blue/Red)</option>
+            <option value="retro">Retro (Green/Yellow)</option>
+            <option value="ocean">Ocean (Cyan/Purple)</option>
+            <option value="fire">Fire (Orange/Red)</option>
+            <option value="synthwave">Synthwave (Pink/Purple)</option>
+            <option value="forest">Forest (Green)</option>
+            <option value="candy">Candy (Pink)</option>
+            <option value="gold">Gold (Yellow/Orange)</option>
+            <option value="twilight">Twilight (Purple/Slate)</option>
+          </select>
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Tab Cloak</div>
+          <label class="toggle-switch"><input type="checkbox" id="cloakToggle"><span class="toggle-slider"></span></label>
+        </div>
+        <div id="cloakInputContainer" style="display:none;">
+          <input type="text" id="cloakNameInput" class="search-bar" placeholder="Enter tab name…" style="width:100%;margin-top:8px;">
+        </div>
+        <div class="settings-option">
+          <div class="settings-label">Total Favorites</div>
+          <div class="settings-value"><span id="favCount">0</span> games</div>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-option" style="flex-direction:column;align-items:stretch;">
+          <label for="faviconUpload" style="display:block;margin-bottom:8px;">
+            <input type="file" id="faviconUpload" accept="image/*" style="display:none;">
+            <span class="settings-btn" style="display:block;text-align:center;margin:0;">Upload Favicon</span>
+          </label>
+          <button id="clearImageFaviconBtn" class="settings-btn">Clear Favicon</button>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-option">
+          <button id="clearFavoritesBtn" class="settings-btn danger">Clear Favorites</button>
+        </div>
+        <div class="settings-option">
+          <button id="clearRecentBtn" class="settings-btn danger">Clear Recent History</button>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-option">
+          <button id="exportBtn" class="settings-btn">Export Settings</button>
+        </div>
+        <div class="settings-option">
+          <label for="importBtn" style="display:block;">
+            <input type="file" id="importBtn" accept=".json" style="display:none;">
+            <span class="settings-btn" style="display:block;text-align:center;margin:0;">Import Settings</span>
+          </label>
+        </div>
+        <div class="settings-option">
+          <button id="resetBtn" class="settings-btn danger">Reset All Settings</button>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-info">
+          <div class="info-row"><strong>Total Games:</strong> <span id="statsTotal">0</span></div>
+          <div class="info-row"><strong>Playable:</strong> <span id="statsPlayable">0</span></div>
+          <div class="info-row"><strong>Favorites:</strong> <span id="statsFav">0</span></div>
+          <div class="info-row"><strong>Recently Played:</strong> <span id="statsRecent">0</span></div>
+          <div class="info-row"><strong>Local Storage:</strong> <span id="storageUsage">0 KB</span></div>
+          <div class="info-row"><strong>Total Playtime:</strong> <span id="totalPlaytime">0h</span></div>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-info">
+          <div class="info-row"><strong>App:</strong> Ninth Game Launcher</div>
+          <div class="info-row"><strong>Version:</strong> ALPHA</div>
+          <div class="info-row"><strong>Mode:</strong> <span id="modeDisplay">Dark</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="backToTopBtn" title="Back to Top" style="display:none;">↑</button>
+
+  
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
