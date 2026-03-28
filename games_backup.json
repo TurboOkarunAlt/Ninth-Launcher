@@ -82,7 +82,7 @@
   {
     "title": "Flying Gorilla 3D",
     "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/Gorilla/index.html",
-    "cover": "https://github.com/TurboOkarunAlt/Aurora/blob/main/games/Gorillla/NinthCover.png"
+    "cover": "https://github.com/TurboOkarunAlt/Aurora/blob/main/games/Gorilla/NinthCover.png"
   },
   {
     "title": "Five Nights at Winstons",
@@ -140,14 +140,19 @@
     "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/PeoplePlayground/cover.png"
   },
   {
-    "title": "Hollow Knight",
-    "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/HollowKnight/index.html",
-    "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/HollowKnight/NinthCover.png"
-  },
-  {
-    "title": "Slime Rancher",
-    "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/SlimeR/index.html",
-    "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/SlimeR/NinthCover.png"
+  "title": "Hollow Knight",
+  "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/HollowKnight/index.html",
+  "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/HollowKnight/NinthCover.png"
+},
+{
+  "title": "Hollow Knight Silksong",
+  "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/Silksong/indeex.html",
+  "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/Silksong/NinthCover.png"
+},
+{
+  "title": "Slime Rancher",
+  "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/SlimeR/index.html",
+  "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/SlimeR/NinthCover.png"
   },
   {
     "title": "Cuphead",
