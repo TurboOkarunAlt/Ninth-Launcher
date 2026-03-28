@@ -140,12 +140,17 @@
     "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/PeoplePlayground/cover.png"
   },
   {
-    "title": "Hollow Knight",
-    "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/HollowKnight/index.html",
-    "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/HollowKnight/NinthCover.png"
-  },
-  {
-    "title": "Slime Rancher",
+  "title": "Hollow Knight",
+  "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/HollowKnight/index.html",
+  "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/HollowKnight/NinthCover.png"
+},
+{
+  "title": "Hollow Knight Silksong",
+  "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/Silksong/index.html",
+  "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/Silksong/cover.png"
+},
+{
+  "title": "Slime Rancher",,
     "entry": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/SlimeR/index.html",
     "cover": "https://cdn.jsdelivr.net/gh/TurboOkarunAlt/Aurora@main/games/SlimeR/NinthCover.png"
   },
